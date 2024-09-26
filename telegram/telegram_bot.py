@@ -78,7 +78,7 @@ class TelegramBot:
                     },
                     "Baji INR": {
                         "url": "https://telemetr.io/en/channels/1545322793-baji_ind",
-                        "sheet_id": '17cyuRgQ0zj4C3XGboHdJ-GAr8Vm09TOgqaM_NkQc92I',
+                        "sheet_id": '1MTfTxWFgvmlYbGIGH9NjGsH7WfExOZqEbqdPlUDsjkU',
                         "xpaths": {
                             'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
                             'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
@@ -87,7 +87,7 @@ class TelegramBot:
                     },
                     "BAJI PKR": {
                         "url": "https://telemetr.io/en/channels/1803180364-baji_pak",
-                        "sheet_id": '1tn4Fa6-etkqyYvnQYp-pULjr_AH2ZWWUXyxVBEzGXko',
+                        "sheet_id": '15CzG1X34AwKOysHvO4Nb1NRG3tdUFzEVU3QnFu_Hvdw',
                         "xpaths": {
                             'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
                             'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
@@ -96,7 +96,7 @@ class TelegramBot:
                     },
                     "BAJI NPR": {
                         "url": "https://telemetr.io/en/channels/2058296847-baji_npl",
-                        "sheet_id": '1ufiXUw3lyvHUnnLPRE7ZA_gTIaTVExmNEIyEZcxBOiU',
+                        "sheet_id": '16QpRAQesYTK85zmLU4L1nEusfhXVySPuq4DihCrSsYs',
                         "xpaths": {
                             'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
                             'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
@@ -350,7 +350,7 @@ class TelegramBot:
     def extract_dynamic_post_ids(self):
         logging.info("Starting to extract post data...")
         post_data = []
-        max_posts = 500
+        max_posts = 1000
         base_xpath = "/html/body/main/div[6]/div[2]/div/div/div"
 
         # Define dynamic paths for post links, dates, views, and reactions
