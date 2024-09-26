@@ -5,3 +5,5 @@ google-auth-httplib2
 google-api-python-client
 tdqm
 requests
+pytest-playwright
+mysql-connector-python
