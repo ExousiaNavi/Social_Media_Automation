@@ -1,0 +1,14 @@
+{
+  "type": "service_account",
+  "project_id": "all-brands-performance",
+  "private_key_id": "3711739d3e5172e1f69575b0213302d35f507462",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCz0kG4RbsiJV4w\nIi7RTcrw02AtkO9nh9lZZPT8q5UIPJiLf1npVRBexlpUrEsHjFNHW+/P+dS2Pukw\n9AufleZnjtHvKo5s+dgqpIkisteAKb3pWEjMN2KmrBUiEntNH3bFcCxcrTVeg1Jx\nz6C2RILYwP2iO6kxDivtWXrNNgA67XFhvyLpvPFDybKYqYl5EXjedmQ9788W+W0V\nWvC+xW4Sf6OciqLMUL+jxzomqTYG+Syg/h8/qd+y4TH5I24E0aTxogN77OYKyE3z\nGzB08b+OyIMyYw4q8i83kx5USIZ+i+4plyv4cqI4jRudvtBsAhT5bY6eJ2WG8LwB\nS97d4OfTAgMBAAECggEAEC4mHbegjAUCwaAByHGQhjTu3YrCD/XIV+Peq3Gg+lnB\nfCPcakNuMqj0bdQG+EnnIG+kV3lqa2+jufTrqtNpJP5T44pXwHSGv+eIM2gWPgED\nhqCcBEwjg03OpP82uwzOuhtK0pf/Sl7Up0sAcgYeI/TRnaxyn+hfiX7YruhiAus9\n+M4ZBcpXDu6FCmEn+i8X30ZJjOicP1qmhKI4mM//Q4m3cZKygErZLkxfpq7uH0A3\ngr439LyBQox5JElesz7XyXrMfd0oP9zn5ZH5AHIVT+xTaud5lKb8oxaVDY/Ll23U\nIM40/eKKt13NH/+2CtBnVn58PexXC7H/Sn3zSuCU4QKBgQDfZdK9ijCJKFWEShg6\nY6iB5A9CIqO8I3vTS5sn/tDkZCLH0SJr22zVyXT85IPTUaS95OGnWXVJyjevVp0z\nXeBFgbxIRzwIbFdpBPR72R0Ku2IihJwWEfpMid/wxmQp8bJfexDDYRI/PFIWuxYn\nmYy3hw4u3XmEV8RhCv7v8mPa8QKBgQDOEGkrVhzCAGIUTruTncOFAYP3YXy7ZA/n\nhsaiHJ0ldpRL3xwnW0cW0jj5yzcxYnEYQpHS5H4J5zKeV5K7eNDbGoYu04zfT6RC\nzz9hzdZ0DhCq8lRMGBNPKV7z5aJTSzFa/nmnfb2Fwx8VejeGuJDLdPwlWI1djs7N\nopeGN8THAwKBgQC1/e+29bMgqbkxMmOWfcWzO6WqjSmyhX3E3t0hshdfWKx0+E0A\nbRu29o3V0BwMtYBuKt4iRWClopXGw9sBE8M3HL/UaiPgANMc/SpnErL0IT+LO1kl\nKbQtUk0bi6Ph/8L+wfUgFh6VYYDGf9dGn3LhuKa3SzpJtG6JWDnkJCVxIQKBgQC8\nPHuF7ezpP2ZY/K8XIsfHiWHeqnxBxh9NNW3gCtl2roK7aD0Uqqoe67zGWt+5Sh7b\ntXv2NWn5a+xufrr4bF4FuI4Y2oFWQS9hJGbW1ixv6aVKM4HT3S5OYxFtJTkKc6bL\nY6kH2rI1LdAIU5PDingik2P+TY0diOXbLQrTvcAQtwKBgHCxsn/dOPFCSPUdtvol\n4KyDP8EgG9oigCSiIlhYQzUCxdeaA+VjZfhI2qFsR7GE3cju/KKHSCTMEirO0gX/\ntfPSDi0ZwC3wZpIqOElW3egdC/v59IFXmo9oDRhNhs9vkhcuIfU1rXokYFo9/8oI\n1IAn/NdGSbZfyO2nol+TlWPo\n-----END PRIVATE KEY-----\n",
+  "client_email": "google-sheets-access-account@all-brands-performance.iam.gserviceaccount.com",
+  "client_id": "107941515124665991155",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/google-sheets-access-account%40all-brands-performance.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
+  

@@ -25,7 +25,7 @@ from mysql.connector import Error
 class TelegramBot:
     def __init__(self):
          # Get the Selenium WebDriver instance from the Browser class
-        self.driver_path = r'C:\Users\BJ-LAP-65\Downloads\platform\chromedriver-win64\chromedriver.exe'
+        self.driver_path = r'C:\Users\BJ-LAP-65\Documents\GitHub\Social_Media_Automation\chromedriver-win64\chromedriver.exe'
         # self.channel_url = ''
         self.sheet_id = ''
         self.driver = ''
@@ -69,7 +69,7 @@ class TelegramBot:
                     # Commented out BDT, INR, and NPR for testing PKR
                     "Baji BDT": {
                         "url": "https://telemetr.io/en/channels/1829680439-baji_bgd/publish",
-                        "sheet_id": '17rvea77Asr9VOgz2iYNk5JaTmmrdiNloyXW1kseQmEI',
+                        "sheet_id": '1V1aVnO_ShcEh5ZQG37DfYijdeS3rLkeyRb8Fn-xHeWk',
                         "xpaths": {
                             'show_more_button': "/html/body/main/div[6]/div[2]/div[2]/div[2]/div/button",
                             'archive_button': "/html/body/main/div[6]/div[2]/div[2]/div[2]/div/a",
@@ -105,7 +105,7 @@ class TelegramBot:
                     }
                 }
 
-                self.service_account_file = r"C:\Users\BJ-LAP-65\Downloads\platform\performance-424301-244a41249704.json"
+                self.service_account_file = r"C:\Users\BJ-LAP-65\Documents\GitHub\Social_Media_Automation\all-brands-performance-3711739d3e51.json"
 
     # Method to open Telegram Web using Selenium
     def automate_task(self, max_retries=3, retry_delay=5):
@@ -207,20 +207,35 @@ class TelegramBot:
             credentials = Credentials.from_service_account_file(self.service_account_file, scopes=SCOPES)
             service = build('sheets', 'v4', credentials=credentials)
 
-            values = [["Date", "Post ID", "Link", "Views", "Reactions"]] + [list(post.values()) for post in data]
+            # Prepare the values to be uploaded to Google Sheets
+            values = [["Date", "Post ID", "Link", "Views", "Reactions"]]  # Header row
+            
+            for post in data:
+                # Store each post's data in the database first
+                self.store_data(
+                    post['Date'],
+                    post['Post ID'],
+                    post['Link'],
+                    post['Views'],
+                    post['Reactions']
+                )
+                # Append the post data to the values list
+                values.append(list(post.values()))
 
+            # Prepare the request to update Google Sheets
             request = service.spreadsheets().values().update(
                 spreadsheetId=self.sheet_id,
                 range='Telegram: Page Insights!A1',
                 valueInputOption='RAW',
                 body={'values': values}
             )
-          
+
+            # Execute the request
             response = request.execute()
             logging.info(f"Data uploaded to Google Sheets: {response}")
         except Exception as e:
-            logging.error(f"Error uploading data to Google Sheets: {str(e)}")    
-
+            logging.error(f"Error uploading data to Google Sheets: {str(e)}")
+   
 
     def create_driver(self):
         logging.info("Creating WebDriver instance...")
@@ -335,7 +350,7 @@ class TelegramBot:
     def extract_dynamic_post_ids(self):
         logging.info("Starting to extract post data...")
         post_data = []
-        max_posts = 1000
+        max_posts = 500
         base_xpath = "/html/body/main/div[6]/div[2]/div/div/div"
 
         # Define dynamic paths for post links, dates, views, and reactions
@@ -432,10 +447,10 @@ class TelegramBot:
 
         logging.info(f"Extraction completed. Total posts extracted: {len(post_data)}")
         return post_data
-    
 
     # Store data into database
     def store_data(self, formatted_date, post_id, post_link, post_views, reactions_string):
+
         """Store data into the MySQL database."""
         insert_query = '''
         INSERT INTO telegram (date, post_id, link, views, reactions) VALUES (%s, %s, %s, %s,%s)

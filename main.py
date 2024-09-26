@@ -17,9 +17,9 @@ if __name__ == "__main__":
     # platform.add_platform_test(FacebookAutomation().run_tests)
 
     # Telegram
-    # platform.add_platform_test(TelegramAutomation().run_tests)
+    platform.add_platform_test(TelegramAutomation().run_tests)
     #bj88
-    platform.add_platform_test(BJ88Automation().run_tests)
+    # platform.add_platform_test(BJ88Automation().run_tests)
 
     # Twitter
     # platform.add_platform_test(TwitterAutomation().run_tests)
