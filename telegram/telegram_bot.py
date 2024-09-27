@@ -495,7 +495,7 @@ import mysql.connector
 from mysql.connector import Error
 
 class TelegramBot:
-    MAX_RETRIES = 3  # Maximum number of retries in case of error
+    MAX_RETRIES = 5  # Maximum number of retries in case of error
     RETRY_DELAY = 5  # Delay between retries (in seconds)
     logging.basicConfig(level=logging.INFO)
     def __init__(self):
@@ -526,21 +526,24 @@ class TelegramBot:
             'password_next_button': '//*[@id="passwordNext"]/div/button/span',
             'login_confirm': '//nav/div[contains(@class, "logged-in")]',
             'just_browse': '//button[contains(text(), "Just browsing")]',
-            'accept_all': '//button[contains(text(), "Accept all")]'
+            'accept_all': '//button[contains(text(), "Accept all")]',
+            'show_more_button': '//button[contains(text(), "Show more")]',
+            'archive_button': '//a[contains(text(),"Go to the archive of posts")]',
+            'archive_show_more_button': '//a[contains(text(), "Show more")]'
         }
 
-        self.BRANDS = {
-            "Baji BDT": {
-                "url": "https://telemetr.io/en/channels/1829680439-baji_bgd/publish",
-                "sheet_id": '1V1aVnO_ShcEh5ZQG37DfYijdeS3rLkeyRb8Fn-xHeWk',
-                "xpaths": {
-                    'show_more_button': '//button[contains(text(), "Show more")]',
-                    'archive_button': '//a[contains(text(),"Go to the archive of posts")]',
-                    'archive_show_more_button': '//a[contains(text(), "Show more")]'
-                }
-            }
-            # Add other brands similarly
-        }
+        # self.BRANDS = {
+        #     "Baji BDT": {
+        #         "url": "https://telemetr.io/en/channels/1829680439-baji_bgd/publish",
+        #         "sheet_id": '1V1aVnO_ShcEh5ZQG37DfYijdeS3rLkeyRb8Fn-xHeWk',
+        #         "xpaths": {
+        #             'show_more_button': '//button[contains(text(), "Show more")]',
+        #             'archive_button': '//a[contains(text(),"Go to the archive of posts")]',
+        #             'archive_show_more_button': '//a[contains(text(), "Show more")]'
+        #         }
+        #     }
+        #     # Add other brands similarly
+        # }
 
         self.service_account_file = 'path_to_your_service_account_file.json'
 
@@ -554,12 +557,13 @@ class TelegramBot:
         except Error as e:
             print(f"Error connecting to MySQL: {e}")
 
-    async def run(self):
+    
+    async def run(self, email, password, main_url, currency, url):
         """Main wrapper to handle retries."""
         retries = 0
         while retries < self.MAX_RETRIES:
             try:
-                await self.automate_task()
+                await self.automate_task(email, password, main_url, currency, url)
                 logging.info("Task completed successfully.")
                 break  # Exit the loop if the task is successful
 
@@ -572,7 +576,7 @@ class TelegramBot:
                 else:
                     logging.error(f"Max retries reached. Task failed after {self.MAX_RETRIES} attempts.")
 
-    async def automate_task(self):
+    async def automate_task(self, email, password, main_url, currency, url):
         """Main method to run Playwright automation."""
         async with async_playwright() as p:
             # Using fake-useragent to generate a random user agent for each session
@@ -612,52 +616,52 @@ class TelegramBot:
 
             self.page = await context.new_page()
 
-            for channel_name, channel_info in self.BRANDS.items():
-                logging.info(f"Processing {channel_name}...")
+            logging.info(f"Processing {currency}...")
 
-                await self.page.goto("https://telemetr.io/en")
-                logging.info("Navigating to the website...")
+            await self.page.goto(main_url)
+            logging.info("Navigating to the website...")
 
-                # Perform login
-                try:
-                    await self.page.locator(self.xpaths_common['sign_in_button']).nth(0).click()
-                    await self.page.click(self.xpaths_common['sign_in_with_google'])
-                    await self.page.fill(self.xpaths_common['email_field'], self.email)
-                    await self.page.click(self.xpaths_common['email_next_button'])
-                    await self.page.fill(self.xpaths_common['password_field'], self.password)
-                    await self.page.click(self.xpaths_common['password_next_button'])
-                    logging.info("Logged in successfully.")
-                    await asyncio.sleep(10)
-                    
-                     # Extract cookies after login
-                    cookies = await context.cookies()
-                    self.cookies = cookies 
-                except Exception as e:
-                    logging.error(f"Login failed: {e}")
-                    raise  # Re-raise to trigger retry
-
-                # Navigate to the channel URL
-                await self.page.goto(channel_info['url'])
-                logging.info(f"Navigated to {channel_info['url']}")
+            # Perform login
+            try:
+                await self.page.locator(self.xpaths_common['sign_in_button']).nth(0).click()
+                await self.page.click(self.xpaths_common['sign_in_with_google'])
+                await self.page.fill(self.xpaths_common['email_field'], email)
+                await self.page.click(self.xpaths_common['email_next_button'])
+                await self.page.fill(self.xpaths_common['password_field'], password)
+                await self.page.click(self.xpaths_common['password_next_button'])
+                logging.info("Logged in successfully.")
                 await asyncio.sleep(10)
-                # await self.page.locator(self.xpaths_common['just_browse']).click(force=True)
-                await self.page.locator(self.xpaths_common['accept_all']).click(force=True)
-                # Click "Show More"
-                await self.click_show_more(channel_info['xpaths']['show_more_button'], 3, 'out')
+                    
+                # Extract cookies after login
+                cookies = await context.cookies()
+                self.cookies = cookies 
+            except Exception as e:
+                logging.error(f"Login failed: {e}")
+                raise  # Re-raise to trigger retry
+
+            # Navigate to the channel URL
+            await self.page.goto(url)
+            logging.info(f"Navigated to {url}")
+            await asyncio.sleep(10)
+            # await self.page.locator(self.xpaths_common['just_browse']).click(force=True)
+            await self.page.locator(self.xpaths_common['accept_all']).click(force=True)
+            # Click "Show More"
+            await self.click_show_more(self.xpaths_common['show_more_button'], 3, 'out', currency)
                 
-                await self.page.click(channel_info['xpaths']['archive_button'])
+            await self.page.click(self.xpaths_common['archive_button'])
                
             
-                await asyncio.sleep(2)
-                await self.click_show_more(channel_info['xpaths']['archive_show_more_button'], 5, 'in')
+            await asyncio.sleep(2)
+            await self.click_show_more(self.xpaths_common['archive_show_more_button'], 5, 'in', currency)
+                
                 
                 
 
-                # Extract posts data
-                # post_data = await self.extract_dynamic_post_ids()
+            # Extract posts data
+            # post_data = await self.extract_dynamic_post_ids()
 
-                # Write data to JSON
-                # self.write_to_json(post_data, f'{channel_name}_post_data.json')
+            # Write data to JSON
+            # self.write_to_json(post_data, f'{channel_name}_post_data.json')
 
             await browser.close()
             
@@ -670,7 +674,7 @@ class TelegramBot:
         return {"messages": filtered_messages}
 
 
-    async def sendApiRequest(self, cursor):
+    async def sendApiRequest(self, cursor, currency):
                     # Parse the URL
                     parsed_url = urllib.parse.urlparse(cursor)
 
@@ -720,12 +724,12 @@ class TelegramBot:
                     # Filter the response
                     filtered_response = await self.filter_response(response.json(), fields_to_remove)
 
-                    channel_name = cursor_value
+                    channel_name = currency+'_'+cursor_value
                     self.write_to_json(filtered_response, f'{channel_name}_post_data.json')
                         
                         
                             
-    async def click_show_more(self, show_more_xpath, clicks, t):
+    async def click_show_more(self, show_more_xpath, clicks, t, currency):
         """Click the 'Show More' button multiple times."""
         for i in range(clicks):
             try:
@@ -739,7 +743,7 @@ class TelegramBot:
 
                     if href:
                         print(f"Found href: {href}")
-                        await self.sendApiRequest(href)
+                        await self.sendApiRequest(href, currency)
                     else:
                         print("No href found for this button.")
                 await show_more_button.click(force=True)
