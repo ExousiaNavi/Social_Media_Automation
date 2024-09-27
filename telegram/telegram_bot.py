@@ -558,12 +558,12 @@ class TelegramBot:
             print(f"Error connecting to MySQL: {e}")
 
     
-    async def run(self, email, password, main_url, currency, url):
+    async def run(self, email, password, main_url, currency, url, brand):
         """Main wrapper to handle retries."""
         retries = 0
         while retries < self.MAX_RETRIES:
             try:
-                await self.automate_task(email, password, main_url, currency, url)
+                await self.automate_task(email, password, main_url, currency, url, brand)
                 logging.info("Task completed successfully.")
                 break  # Exit the loop if the task is successful
 
@@ -576,7 +576,7 @@ class TelegramBot:
                 else:
                     logging.error(f"Max retries reached. Task failed after {self.MAX_RETRIES} attempts.")
 
-    async def automate_task(self, email, password, main_url, currency, url):
+    async def automate_task(self, email, password, main_url, currency, url, brand):
         """Main method to run Playwright automation."""
         async with async_playwright() as p:
             # Using fake-useragent to generate a random user agent for each session
@@ -646,13 +646,13 @@ class TelegramBot:
             # await self.page.locator(self.xpaths_common['just_browse']).click(force=True)
             await self.page.locator(self.xpaths_common['accept_all']).click(force=True)
             # Click "Show More"
-            await self.click_show_more(self.xpaths_common['show_more_button'], 3, 'out', currency)
+            await self.click_show_more(self.xpaths_common['show_more_button'], 3, 'out', currency, brand)
                 
             await self.page.click(self.xpaths_common['archive_button'])
                
             
             await asyncio.sleep(2)
-            await self.click_show_more(self.xpaths_common['archive_show_more_button'], 5, 'in', currency)
+            await self.click_show_more(self.xpaths_common['archive_show_more_button'], 5, 'in', currency, brand)
                 
                 
                 
@@ -674,7 +674,7 @@ class TelegramBot:
         return {"messages": filtered_messages}
 
 
-    async def sendApiRequest(self, cursor, currency):
+    async def sendApiRequest(self, cursor, currency, brand):
                     # Parse the URL
                     parsed_url = urllib.parse.urlparse(cursor)
 
@@ -725,11 +725,11 @@ class TelegramBot:
                     filtered_response = await self.filter_response(response.json(), fields_to_remove)
 
                     channel_name = currency+'_'+cursor_value
-                    self.write_to_json(filtered_response, f'{channel_name}_post_data.json')
+                    self.write_to_json(filtered_response, f'{channel_name}_post_data.json', brand)
                         
                         
                             
-    async def click_show_more(self, show_more_xpath, clicks, t, currency):
+    async def click_show_more(self, show_more_xpath, clicks, t, currency, brand):
         """Click the 'Show More' button multiple times."""
         for i in range(clicks):
             try:
@@ -743,7 +743,7 @@ class TelegramBot:
 
                     if href:
                         print(f"Found href: {href}")
-                        await self.sendApiRequest(href, currency)
+                        await self.sendApiRequest(href, currency, brand)
                     else:
                         print("No href found for this button.")
                 await show_more_button.click(force=True)
@@ -808,12 +808,26 @@ class TelegramBot:
 
     #     # return post_data
 
-    def write_to_json(self, data, filename):
+    def write_to_json(self, data, filename, brand):
+        # Define the base folder path
         folder_path = "baji_json_folder"
+        
+        # Create a sub-folder based on the brand name
+        sub_folder = os.path.join(folder_path, brand)
+        
+        # Create the base folder if it doesn't exist
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
-        full_path = os.path.join(folder_path, filename)
+        
+        # Create the sub-folder (brand folder) if it doesn't exist
+        if not os.path.exists(sub_folder):
+            os.makedirs(sub_folder)
+        
+        # Define the full file path inside the brand sub-folder
+        full_path = os.path.join(sub_folder, filename)
+        
         try:
+            # Write the JSON data to the file
             with open(full_path, 'w', encoding='utf-8') as file:
                 json.dump(data, file, indent=4)
                 logging.info(f"Data written to {full_path}")

@@ -30,6 +30,7 @@ class TelegramAutomation:
         for item in data["data"]:
              # Loop through all the keys in the current item
             for key, value in item.items():
+                logging.info(f"Key: {key}")
                 # Check if 'credentials' exist in the current key's value
                 if "credentials" in value:
                     credentials = value["credentials"]
@@ -45,10 +46,10 @@ class TelegramAutomation:
                             channel = value["currency_channels"]
                             main_url = "https://telemetr.io/en"
                             for ch in channel:
-                                logging.info(f"currency channel: {ch.get('currency')}")
+                                # logging.info(f"currency channel: {ch.get('currency')}")
                                 currency = ch.get("currency", "")
                                 url = ch.get("url", "")
-                                await self.telegram_bot.run(email, password, main_url, currency, url)
+                                await self.telegram_bot.run(email, password, main_url, currency, url, key)
                         # Log into Telegram using a phone number
                         #main url
                         # main_url = "https://telemetr.io"
