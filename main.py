@@ -1,12 +1,15 @@
 from platform_controller import Platform
+#telegram
 from telegram.telegram_automation import TelegramAutomation
+#facebook
 from facebook.facebook_automation import FacebookAutomation
+#twitter
 from twitter.twitter_automation import TwitterAutomation
-from telegram.bj88.bj88_automation import BJ88Automation
 from twitter.jeetbuzz_twitter_automation import JeetBuzzTwitterAutomation
 from twitter.six6s_twitter_automation import Six6xTwitterAutomation
 from twitter.bjcharity_twitter_automation import BJCharityTwitterAutomation
 from twitter.bjsports_twitter_automation import BJSportsTwitterAutomation
+
 import asyncio
 # Entry point for the platform
 if __name__ == "__main__":
@@ -18,8 +21,6 @@ if __name__ == "__main__":
 
     # Telegram
     platform.add_platform_test(TelegramAutomation().run_tests)
-    #bj88
-    # platform.add_platform_test(BJ88Automation().run_tests)
 
     # Twitter
     # platform.add_platform_test(TwitterAutomation().run_tests)
