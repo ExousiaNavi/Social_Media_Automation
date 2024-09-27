@@ -57,15 +57,14 @@ class TelegramBot:
                 self.email = "paulabutar7@gmail.com"
                 self.password = "Bernerslee11"
                 self.xpaths_common = {
-                    'sign_in_button': '/html/body/header/nav/div[5]/button',
-                    'sign_in_with_google': '//*[@id="headlessui-dialog-panel-:r5:"]/div/div[1]/div/button[2]',
-                    'email_field': '//*[@id="identifierId"]',
-                    'email_next_button': '//*[@id="identifierNext"]/div/button/span',
-                    'password_field': '//*[@id="password"]/div[1]/div/div[1]/input',
-                    'password_next_button': '//*[@id="passwordNext"]/div/button/span',
-                    'login_confirm': '/html/body/header/nav/div[5]'
-
-                }   
+                'sign_in_button': '/html/body/header/nav/div[5]/button',
+                'sign_in_with_google': '//*[@id="headlessui-dialog-panel-:r5:"]/div/div[1]/div/button[2]',
+                'email_field': '//*[@id="identifierId"]',
+                'email_next_button': '//*[@id="identifierNext"]/div/button/span',
+                'password_field': '//*[@id="password"]/div[1]/div/div[1]/input',
+                'password_next_button': '//*[@id="passwordNext"]/div/button/span',
+                'login_confirm': '/html/body/header/nav/div[5]'
+            }   
                 self.BRANDS = {
                     # Commented out BDT, INR, and NPR for testing PKR
                     "Baji BDT": {
@@ -77,33 +76,33 @@ class TelegramBot:
                             'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
                         }
                     },
-                    # "Baji INR": {
-                    #     "url": "https://telemetr.io/en/channels/1545322793-baji_ind",
-                    #     "sheet_id": '1MTfTxWFgvmlYbGIGH9NjGsH7WfExOZqEbqdPlUDsjkU',
-                    #     "xpaths": {
-                    #         'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
-                    #         'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
-                    #         'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
-                    #     }
-                    # },
-                    # "BAJI PKR": {
-                    #     "url": "https://telemetr.io/en/channels/1803180364-baji_pak",
-                    #     "sheet_id": '15CzG1X34AwKOysHvO4Nb1NRG3tdUFzEVU3QnFu_Hvdw',
-                    #     "xpaths": {
-                    #         'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
-                    #         'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
-                    #         'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
-                    #     }
-                    # },
-                    # "BAJI NPR": {
-                    #     "url": "https://telemetr.io/en/channels/2058296847-baji_npl",
-                    #     "sheet_id": '16QpRAQesYTK85zmLU4L1nEusfhXVySPuq4DihCrSsYs',
-                    #     "xpaths": {
-                    #         'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
-                    #         'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
-                    #         'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
-                    #     }
-                    # }
+                    "Baji INR": {
+                        "url": "https://telemetr.io/en/channels/1545322793-baji_ind",
+                        "sheet_id": '1MTfTxWFgvmlYbGIGH9NjGsH7WfExOZqEbqdPlUDsjkU',
+                        "xpaths": {
+                            'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
+                            'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
+                            'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
+                        }
+                    },
+                    "BAJI PKR": {
+                        "url": "https://telemetr.io/en/channels/1803180364-baji_pak",
+                        "sheet_id": '15CzG1X34AwKOysHvO4Nb1NRG3tdUFzEVU3QnFu_Hvdw',
+                        "xpaths": {
+                            'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
+                            'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
+                            'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
+                        }
+                    },
+                    "BAJI NPR": {
+                        "url": "https://telemetr.io/en/channels/2058296847-baji_npl",
+                        "sheet_id": '16QpRAQesYTK85zmLU4L1nEusfhXVySPuq4DihCrSsYs',
+                        "xpaths": {
+                            'show_more_button': "/html/body/main/div[6]/div[1]/div[2]/div/button",
+                            'archive_button': "/html/body/main/div[6]/div[1]/div[2]/div/a",
+                            'archive_show_more_button': "/html/body/main/div[6]/div[2]/div/button"
+                        }
+                    }
                 }
 
                 self.service_account_file = r"C:\Users\BJ-LAP-65\Documents\GitHub\Social_Media_Automation\all-brands-performance-3711739d3e51.json"
@@ -448,7 +447,6 @@ class TelegramBot:
 
         logging.info(f"Extraction completed. Total posts extracted: {len(post_data)}")
         return post_data
-
 
     # Store data into database
     def store_data(self, formatted_date, post_id, post_link, post_views, reactions_string):
