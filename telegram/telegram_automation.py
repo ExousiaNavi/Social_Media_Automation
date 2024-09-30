@@ -40,7 +40,7 @@ class TelegramAutomation:
                     password = credentials.get("password", "")
                     
                     # Only log if both email and password are non-empty
-                    if (email and password) and (key == 'Baji'):
+                    if (email and password):
                         
                         if "currency_channels" in value:
                             channel = value["currency_channels"]
