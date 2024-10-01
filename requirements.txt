@@ -8,3 +8,4 @@ requests
 pytest-playwright
 mysql-connector-python
 fake-useragent
+cryptography

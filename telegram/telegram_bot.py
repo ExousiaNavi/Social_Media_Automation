@@ -493,6 +493,7 @@ from fake_useragent import UserAgent, FakeUserAgentError
 from playwright.async_api import async_playwright
 import mysql.connector
 from mysql.connector import Error
+from cryptography.fernet import Fernet, InvalidToken
 
 class TelegramBot:
     MAX_RETRIES = 5  # Maximum number of retries in case of error
@@ -559,6 +560,7 @@ class TelegramBot:
 
     
     async def run(self, email, password, main_url, currency, url, brand):
+
         """Main wrapper to handle retries."""
         retries = 0
         while retries < self.MAX_RETRIES:
@@ -575,6 +577,44 @@ class TelegramBot:
                     await asyncio.sleep(self.RETRY_DELAY * retries)  # Exponential backoff
                 else:
                     logging.error(f"Max retries reached. Task failed after {self.MAX_RETRIES} attempts.")
+
+
+     # Generate a key for encryption and decryption
+    # You must store this key securely. Anyone with this key can encrypt and decrypt your data.
+   
+    async def generate_key(self):
+        return Fernet.generate_key()
+
+    # Function to encrypt a message
+    async def encrypt_message(self,message, key):
+        """
+        Encrypts a message using the provided key.
+        
+        :param message: The message to encrypt (string)
+        :param key: The encryption key (bytes)
+        :return: Encrypted message (bytes)
+        """
+        f = Fernet(key)
+        encrypted_message = f.encrypt(message.encode())  # Message must be encoded to bytes
+        return encrypted_message
+
+    # Function to decrypt a message
+    async def decrypt_message(self,encrypted_message, key):
+        """
+        Decrypts a message using the provided key.
+        
+        :param encrypted_message: The encrypted message (bytes)
+        :param key: The decryption key (bytes)
+        :return: Decrypted message (string)
+        """
+        try:
+            f = Fernet(key)
+            decrypted_message = f.decrypt(encrypted_message)
+            return decrypted_message.decode()  # Return the decoded string
+        except (InvalidToken, ValueError) as e:
+            print(f"Decryption failed: {e}")
+            return None  # Return None or handle the error as needed
+            # Generate a key and instantiate a Fernet instance
 
     async def automate_task(self, email, password, main_url, currency, url, brand):
         """Main method to run Playwright automation."""
@@ -621,13 +661,20 @@ class TelegramBot:
             await self.page.goto(main_url)
             logging.info("Navigating to the website...")
 
+            key = await self.generate_key()
+            print(password)
+            print(key)
+            decrypted_pass = await self.decrypt_message(password,key)
+            print(decrypted_pass)
+
+
             # Perform login
             try:
                 await self.page.locator(self.xpaths_common['sign_in_button']).nth(0).click()
                 await self.page.click(self.xpaths_common['sign_in_with_google'])
                 await self.page.fill(self.xpaths_common['email_field'], email)
                 await self.page.click(self.xpaths_common['email_next_button'])
-                await self.page.fill(self.xpaths_common['password_field'], password)
+                await self.page.fill(self.xpaths_common['password_field'], decrypted_pass)
                 await self.page.click(self.xpaths_common['password_next_button'])
                 logging.info("Logged in successfully.")
                 await asyncio.sleep(10)

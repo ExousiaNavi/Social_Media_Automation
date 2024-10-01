@@ -3,12 +3,58 @@ import time
 import os
 import json
 import logging
+from cryptography.fernet import Fernet
+
 # This class contains test cases to automate Telegram actions
 class TelegramAutomation:
     logging.basicConfig(level=logging.INFO)
+    
     def __init__(self):
         # Create an instance of the TelegramBot class
         self.telegram_bot = TelegramBot()
+
+        # self.key = Fernet.generate_key()
+        # self.cipher = Fernet(self.key)
+
+        # # Load data from the JSON file
+        self.file_path = 'credentials/credentials.json'  # Adjust the path as necessary
+        with open(self.file_path, 'r') as file:
+            self.data = json.load(file)
+
+        # Print the loaded data to check its structure
+        # print("Loaded Data:", self.data)
+
+        # Initialize a dictionary to hold encrypted passwords
+        self.encrypted_passwords = {}
+
+        # Encrypt only the passwords
+        for entry in self.data["data"]:
+            for key_name, info in entry.items():
+                if isinstance(info, dict) and "credentials" in info:
+                    key = Fernet.generate_key()
+                    # encrypt_message(info["credentials"]["password"], key)
+                    f = Fernet(key)
+                    encrypted_password = f.encrypt(info["credentials"]["password"].encode())  # Message must be encoded to bytes
+
+                    # password_bytes = info["credentials"]["password"].encode()
+                    # encrypted_password = self.cipher.encrypt(password_bytes)
+                    info["credentials"]["password"] = encrypted_password  # Store encrypted password as bytes
+
+        print(f"Encrypted Data: {self.data}")
+        print(f"Encryption Key: {self.key.decode()}")
+
+
+    async def encrypt_message(self,message, key):
+
+        f = Fernet(key)
+        encrypted_message = f.encrypt(message.encode())  # Message must be encoded to bytes
+        return encrypted_message
+
+    async def generate_key(self):
+        return Fernet.generate_key()
+
+
+
 
     # Method to run a series of Telegram Web test cases
     async def run_tests(self):
@@ -24,7 +70,10 @@ class TelegramAutomation:
         # Load the JSON data from a file
         with open(credentials_path, 'r', encoding='utf-8') as file:
             data = json.load(file)
-    
+
+
+
+        
         # Access the 'Baji' data for debug only
         # baji_data = data["data"][0]["Baji"]
         for item in data["data"]:
@@ -40,7 +89,7 @@ class TelegramAutomation:
                     password = credentials.get("password", "")
                     
                     # Only log if both email and password are non-empty
-                    if (email and password):
+                    if (email and password) and (key == 'Baji'):
                         
                         if "currency_channels" in value:
                             channel = value["currency_channels"]
