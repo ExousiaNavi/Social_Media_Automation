@@ -8,4 +8,7 @@ requests
 pytest-playwright
 mysql-connector-python
 fake-useragent
+beautifulsoup4
 cryptography
+gspread
+oauth2client

@@ -4,6 +4,7 @@ import os
 import json
 import logging
 from cryptography.fernet import Fernet
+from en.password_encryptor import PasswordEncryptor
 
 # This class contains test cases to automate Telegram actions
 class TelegramAutomation:
@@ -13,46 +14,24 @@ class TelegramAutomation:
         # Create an instance of the TelegramBot class
         self.telegram_bot = TelegramBot()
 
-        # self.key = Fernet.generate_key()
-        # self.cipher = Fernet(self.key)
+         # Specify the paths to your credentials file and encryption key
+        file_path = os.path.join("credentials", "credentials.json")
+        key_file = os.path.join("encryption", "encryption_key.key")
 
-        # # Load data from the JSON file
-        self.file_path = 'credentials/credentials.json'  # Adjust the path as necessary
-        with open(self.file_path, 'r') as file:
-            self.data = json.load(file)
+        # Initialize the PasswordEncryptor with the paths to the JSON file and key file
+        encryptor = PasswordEncryptor(file_path, key_file)
 
-        # Print the loaded data to check its structure
-        # print("Loaded Data:", self.data)
+        # Load or generate the encryption key
+        key = encryptor.load_key() or encryptor.generate_key()
 
-        # Initialize a dictionary to hold encrypted passwords
-        self.encrypted_passwords = {}
+        # Encrypt passwords in the JSON data
+        encrypted_data = encryptor.encrypt_passwords(key)
 
-        # Encrypt only the passwords
-        for entry in self.data["data"]:
-            for key_name, info in entry.items():
-                if isinstance(info, dict) and "credentials" in info:
-                    key = Fernet.generate_key()
-                    # encrypt_message(info["credentials"]["password"], key)
-                    f = Fernet(key)
-                    encrypted_password = f.encrypt(info["credentials"]["password"].encode())  # Message must be encoded to bytes
+        # Save the encrypted JSON data back to the file
+        encryptor.save_encrypted_data()
 
-                    # password_bytes = info["credentials"]["password"].encode()
-                    # encrypted_password = self.cipher.encrypt(password_bytes)
-                    info["credentials"]["password"] = encrypted_password  # Store encrypted password as bytes
-
-        print(f"Encrypted Data: {self.data}")
-        print(f"Encryption Key: {self.key.decode()}")
-
-
-    async def encrypt_message(self,message, key):
-
-        f = Fernet(key)
-        encrypted_message = f.encrypt(message.encode())  # Message must be encoded to bytes
-        return encrypted_message
-
-    async def generate_key(self):
-        return Fernet.generate_key()
-
+        # Print the encryption keys used (for reference, though not recommended in production)
+        logging.info(f"Encryption Keys: {encryptor.encrypted_passwords}")
 
 
 
@@ -89,16 +68,21 @@ class TelegramAutomation:
                     password = credentials.get("password", "")
                     
                     # Only log if both email and password are non-empty
-                    if (email and password) and (key == 'Baji'):
+                    if (email and password):
                         
                         if "currency_channels" in value:
                             channel = value["currency_channels"]
+                            
+                           
                             main_url = "https://telemetr.io/en"
                             for ch in channel:
                                 # logging.info(f"currency channel: {ch.get('currency')}")
                                 currency = ch.get("currency", "")
                                 url = ch.get("url", "")
-                                await self.telegram_bot.run(email, password, main_url, currency, url, key)
+                                ch_name = ch.get("channel_name")
+                                 #access sheet id
+                                sheet_id = ch.get("sheet_id", "")
+                                await self.telegram_bot.run(email, password, main_url, currency, url, key, ch_name, sheet_id)
                         # Log into Telegram using a phone number
                         #main url
                         # main_url = "https://telemetr.io"
